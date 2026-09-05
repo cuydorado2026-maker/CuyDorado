@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es-ES">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valida tu código | Cuy Dorado</title>
+    <meta name="description" content="Valida tu código del Boleto Dorado Cuy Dorado y descubre si ganaste un premio.">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Cuy Dorado">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <main class="contenedor">
+        <section id="vista-validacion">
+            <h1>VALIDA TU <span>CODIGO</span></h1>
+            <p class="subtitulo">Ingresa el código que encuentras en tu<br class="salto-desktop"> Boleto Dorado para conocer si ganaste.</p>
+            <form id="formulario-codigo">
+                <label class="campo-codigo" for="codigo">
+                    <span class="icono-boleto" aria-hidden="true">★</span>
+                    <input type="text" id="codigo" name="codigo" placeholder="XXXX-XXXX-XXXX" autocomplete="off" required>
+                </label>
+                <button type="submit" class="boton-redireccion">VALIDAR CÓDIGO <span aria-hidden="true">›</span></button>
+                <p id="mensaje" role="status" aria-live="polite"></p>
+            </form>
+            <p class="aviso"><span aria-hidden="true">&#128274;</span> Código único e intransferible.</p>
+        </section>
+
+        <section id="vista-premio" class="vista-premio" hidden aria-live="polite">
+            <div class="mascota-premio" aria-hidden="true">🐹</div>
+            <div class="cinta-premio">¡FELICITACIONES!</div>
+            <h2>GANASTE</h2>
+            <div class="monto-premio" id="monto-premio">S/ 0.00</div>
+            <p class="unidad-premio" id="unidad-premio">SOLES</p>
+            <button type="button" id="boton-canje" class="boton-canje">&#127873; CANJEA TU PREMIO <span aria-hidden="true">›</span></button>
+        </section>
+    </main>
+
+ <script>
+    const URL_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbxESqePcDKpgG_GJNc1b94WvZCAe4gXpNQFYPdAcg17bnqtlcgTBA97hdpHq3paisKIDQ/exec";
+     const formulario = document.getElementById("formulario-codigo");
+     const campoCodigo = document.getElementById("codigo");
+     const mensaje = document.getElementById("mensaje");
+    const vistaValidacion = document.getElementById("vista-validacion");
+    const vistaPremio = document.getElementById("vista-premio");
+    const montoPremio = document.getElementById("monto-premio");
+    const unidadPremio = document.getElementById("unidad-premio");
+    const botonCanje = document.getElementById("boton-canje");
+    let codigoGanador = "";
+
+     formulario.addEventListener("submit", async (evento) => {
+         evento.preventDefault();
+         const codigo = campoCodigo.value.trim();
+         if (!codigo) {
+             campoCodigo.reportValidity();
+             return;
+         }
+
+         if (URL_APPS_SCRIPT.startsWith("PEGA_AQUI")) {
+             mensaje.textContent = "Falta configurar la URL de conexión.";
+             return;
+         }
+
+         mensaje.textContent = "Validando codigo...";
+
+         try {
+             const respuesta = await fetch(`${URL_APPS_SCRIPT}?codigo=${encodeURIComponent(codigo)}`);
+             if (!respuesta.ok) throw new Error("Respuesta no valida");
+
+             const resultado = await respuesta.json();
+             if (!resultado.valido) {
+                 mensaje.textContent = "Codigo no valido.";
+             } else if (resultado.yaRegistrado) {
+                 mensaje.textContent = "Este codigo ya fue registrado anteriormente.";
+             } else if (resultado.gano) {
+                 codigoGanador = codigo;
+                 montoPremio.textContent = `S/ ${resultado.monto}`;
+                 const monto = Number(resultado.monto);
+                 unidadPremio.textContent = monto === 0.2
+                     ? "VEINTE CÉNTIMOS"
+                     : monto === 0.5
+                         ? "CINCUENTA CÉNTIMOS"
+                         : monto === 1
+                             ? "UN SOL"
+                             : "SOLES";
+                 vistaValidacion.hidden = true;
+                 vistaPremio.hidden = false;
+             } else {
+                 mensaje.textContent = "Codigo valido, pero no gano.";
+             }
+         } catch (error) {
+             mensaje.textContent = "No se pudo validar el codigo. Intenta de nuevo.";
+         }
+     });
+
+     botonCanje.addEventListener("click", () => {
+         vistaPremio.innerHTML = `
+             <div class="mascota-canje" aria-hidden="true">🐹</div>
+             <div class="cinta-premio">¡CANJEA TU PREMIO!</div>
+             <p class="texto-canje">Completa tus datos para poder entregarte tu premio.</p>
+             <form id="formulario-canje">
+                 <label class="campo-dato" for="nombre-canje"><span aria-hidden="true">♟</span><input type="text" id="nombre-canje" name="nombre" placeholder="Nombre completo" autocomplete="name" required></label>
+                 <label class="campo-dato" for="telefono-canje"><span aria-hidden="true">☎</span><input type="tel" id="telefono-canje" name="telefono" placeholder="Número de teléfono" autocomplete="tel" required></label>
+                 <label class="campo-dato" for="correo-canje"><span aria-hidden="true">✉</span><input type="email" id="correo-canje" name="correo" placeholder="Correo electrónico" autocomplete="email" required></label>
+                 <button type="submit" class="boton-enviar">&#127873; ENVIAR DATOS <span aria-hidden="true">›</span></button>
+                 <p id="mensaje-canje" role="status" aria-live="polite"></p>
+             </form>`;
+
+         document.getElementById("formulario-canje").addEventListener("submit", async (evento) => {
+             evento.preventDefault();
+             const formularioCanje = evento.currentTarget;
+             const datos = new FormData(formularioCanje);
+             const mensajeCanje = document.getElementById("mensaje-canje");
+             const parametros = new URLSearchParams({
+                 accion: "canjear",
+                 codigo: codigoGanador,
+                 nombre: datos.get("nombre"),
+                 telefono: datos.get("telefono"),
+                 correo: datos.get("correo")
+             });
+
+             mensajeCanje.textContent = "Guardando tus datos...";
+             try {
+                 await fetch(URL_APPS_SCRIPT, {
+                     method: "POST",
+                     mode: "no-cors",
+                     headers: { "Content-Type": "application/x-www-form-urlencoded" },
+                     body: parametros.toString()
+                 });
+                 vistaPremio.innerHTML = `
+                     <div class="mascota-canje" aria-hidden="true">🐹</div>
+                     <div class="cinta-premio cinta-agradecimiento">¡GRACIAS<br>POR TU COMPRA!</div>
+                     <h2 class="titulo-agradecimiento">¡FELICIDADES!</h2>
+                     <h3 class="subtitulo-agradecimiento">POR TU PREMIO</h3>
+                     <div class="aviso-abono">
+                         <p><span aria-hidden="true">S/</span> El área responsable realizará el abono<br>a tu Yape o Plin dentro de las <strong>24 horas.</strong></p>
+                         <p><span aria-hidden="true">✉</span> Te avisaremos por correo electrónico<br>una vez realizado el abono.</p>
+                     </div>
+                     <div class="cierre-agradecimiento">♥ &nbsp; ¡Gracias por ser parte de<br>Cuy Dorado!</div>`;
+                 setTimeout(() => window.location.reload(), 40000);
+             } catch (error) {
+                 mensajeCanje.textContent = "No se pudieron registrar los datos. Intenta de nuevo.";
+             }
+         });
+     });
+ </script>
+</body>
+</html>
