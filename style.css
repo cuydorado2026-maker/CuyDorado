@@ -403,8 +403,8 @@ h1 span {
     }
 
     .contenedor {
-        min-height: calc(100vh - 28px);
-        padding: 36px 18px 28px;
+        min-height: auto;
+        padding: 28px 18px 24px;
         border-width: 5px;
         border-radius: 34px;
     }
