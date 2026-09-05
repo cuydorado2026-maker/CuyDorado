@@ -424,13 +424,13 @@ h1 span {
     }
 
     .campo-codigo {
-        height: 76px;
-        border-radius: 25px;
+        height: 62px;
+        border-radius: 21px;
     }
 
     .icono-boleto {
-        width: 72px;
-        flex-basis: 72px;
+        width: 58px;
+        flex-basis: 58px;
         font-size: 2rem;
     }
 
