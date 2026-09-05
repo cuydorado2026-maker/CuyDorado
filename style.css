@@ -399,10 +399,11 @@ h1 span {
 @media (max-width: 600px) {
     body {
         padding: 14px;
-        background-position: 35% center;
+        background-position: center center;
     }
 
     .contenedor {
+        width: 92%;
         min-height: auto;
         padding: 28px 18px 24px;
         border-width: 5px;
