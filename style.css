@@ -173,6 +173,31 @@ h1 span {
     margin-right: 10px;
 }
 
+.boton-whatsapp {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 10;
+    width: 58px;
+    height: 58px;
+    display: block;
+    border-radius: 50%;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, .35);
+    transition: transform .15s ease, filter .15s ease;
+}
+
+.boton-whatsapp:hover {
+    filter: brightness(1.08);
+    transform: translateY(-2px);
+}
+
+.boton-whatsapp img {
+    width: 100%;
+    height: 100%;
+    display: block;
+    object-fit: contain;
+}
+
 .vista-premio {
     width: 100%;
     position: relative;
@@ -433,7 +458,7 @@ h1 span {
     .icono-boleto {
         width: 58px;
         flex-basis: 58px;
-        font-size: 2rem;
+        font-size: 1.7rem;
     }
 
     #codigo {
