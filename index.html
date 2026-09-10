@@ -34,6 +34,19 @@
             <p class="unidad-premio" id="unidad-premio">SOLES</p>
             <button type="button" id="boton-canje" class="boton-canje">&#127873; CANJEA TU PREMIO <span aria-hidden="true">›</span></button>
         </section>
+
+        <section id="vista-sin-premio" class="vista-sin-premio" hidden aria-live="polite">
+            <div class="mascota-sin-premio" aria-hidden="true">🐹</div>
+            <div class="panel-sin-premio">
+                <div class="banner-sin-premio">
+                    <span class="guion-sin-premio">∿</span>
+                    <span class="titulo-sin-premio">¡SIGUE</span>
+                    <span class="titulo-sin-premio bloque">INTENTÁNDOLO!</span>
+                </div>
+                <p class="subtexto-sin-premio">La suerte puede estar más cerca<br>de lo que imaginas <span aria-hidden="true">😊</span></p>
+                <button type="button" id="boton-reintentar" class="boton-reintentar"><span class="icono-reintentar" aria-hidden="true">↻</span> INTENTAR NUEVAMENTE <span aria-hidden="true">›</span></button>
+            </div>
+        </section>
     </main>
 
     <a class="boton-whatsapp" href="https://wa.me/51936620652?text=Hola%2C%20necesito%20ayuda%20con%20mi%20c%C3%B3digo%20del%20Boleto%20Dorado" target="_blank" rel="noopener noreferrer" aria-label="Atención por WhatsApp">
@@ -47,9 +60,11 @@
      const mensaje = document.getElementById("mensaje");
     const vistaValidacion = document.getElementById("vista-validacion");
     const vistaPremio = document.getElementById("vista-premio");
+    const vistaSinPremio = document.getElementById("vista-sin-premio");
     const montoPremio = document.getElementById("monto-premio");
     const unidadPremio = document.getElementById("unidad-premio");
     const botonCanje = document.getElementById("boton-canje");
+    const botonReintentar = document.getElementById("boton-reintentar");
     let codigoGanador = "";
 
      formulario.addEventListener("submit", async (evento) => {
@@ -90,11 +105,25 @@
                  vistaValidacion.hidden = true;
                  vistaPremio.hidden = false;
              } else {
-                 mensaje.textContent = "Codigo valido, pero no gano.";
+                 vistaValidacion.hidden = true;
+                 vistaPremio.hidden = true;
+                 vistaSinPremio.hidden = false;
+                 mensaje.textContent = "";
+                 mensaje.className = "";
              }
          } catch (error) {
              mensaje.textContent = "No se pudo validar el codigo. Intenta de nuevo.";
          }
+     });
+
+     botonReintentar.addEventListener("click", () => {
+         vistaValidacion.hidden = false;
+         vistaPremio.hidden = true;
+         vistaSinPremio.hidden = true;
+         campoCodigo.value = "";
+         campoCodigo.focus();
+         mensaje.textContent = "";
+         mensaje.className = "";
      });
 
      botonCanje.addEventListener("click", () => {
