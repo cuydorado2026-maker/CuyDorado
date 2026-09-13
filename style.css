@@ -26,6 +26,24 @@ body {
     background: #3a1608 url("ChatGPT.png") center center / cover fixed;
 }
 
+.encabezado {
+    width: min(520px, 100%);
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin: 0 auto -28px;
+}
+
+.logo {
+    display: block;
+    width: clamp(260px, 52vw, 450px);
+    height: auto;
+    max-height: 230px;
+    object-fit: contain;
+    transform: translateY(-48px);
+    filter: drop-shadow(0 8px 12px rgba(43, 16, 0, .35));
+}
+
 .contenedor {
     width: min(520px, 100%);
     min-height: min(335px, calc(100vh - 44px));
