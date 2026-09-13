@@ -329,12 +329,13 @@ h1 span {
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     gap: 0.12em;
-    min-height: 160px;
-    padding: 18px 10px 8px;
+    min-height: 110px;
+    padding: 14px 8px 6px;
     border-radius: 22px;
     color: #ffdb52;
-    font: clamp(2.1rem, 7vw, 6.2rem) Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font: clamp(1.1rem, 3vw, 2.6rem) Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
     letter-spacing: .02em;
     line-height: .82;
     text-shadow: 3px 4px 0 #ab4d00, 0 0 10px rgba(255, 194, 74, .5);
@@ -353,11 +354,13 @@ h1 span {
 
 .titulo-sin-premio {
     display: inline-block;
+    max-width: 100%;
 }
 
 .titulo-sin-premio.bloque {
     display: block;
     margin-top: .05em;
+    width: 100%;
 }
 
 .subtexto-sin-premio {
@@ -369,14 +372,14 @@ h1 span {
 
 .boton-reintentar {
     width: min(620px, 100%);
-    min-height: 70px;
-    padding: 12px 20px;
+    min-height: 58px;
+    padding: 8px 16px;
     border: 4px solid #f8d76a;
     border-radius: 999px;
     background: linear-gradient(180deg, #c45e0d 0%, #7d2d05 100%);
     box-shadow: 0 5px 0 #4d1d04, inset 0 2px 8px rgba(255,255,255,.25);
     color: #fff7df;
-    font: clamp(1.35rem, 3vw, 2.3rem) Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
+    font: clamp(.85rem, 2vw, 1.4rem) Impact, Haettenschweiler, "Arial Narrow Bold", sans-serif;
     letter-spacing: .03em;
     cursor: pointer;
 }
@@ -385,8 +388,8 @@ h1 span {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 42px;
-    height: 42px;
+    width: 34px;
+    height: 34px;
     margin-right: 10px;
     border: 3px solid rgba(255, 247, 223, .8);
     border-radius: 50%;
@@ -436,7 +439,8 @@ h1 span {
     font: 1.35rem Arial, sans-serif;
 }
 
-.campo-dato input {
+.campo-dato input,
+.campo-dato select {
     width: 100%;
     height: 100%;
     padding: 0 12px;
@@ -445,6 +449,10 @@ h1 span {
     color: #4b4b4b;
     background: transparent;
     font: .92rem Georgia, "Times New Roman", serif;
+}
+
+.campo-dato select {
+    cursor: pointer;
 }
 
 .boton-enviar {
