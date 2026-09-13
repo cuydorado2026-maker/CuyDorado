@@ -34,8 +34,9 @@ function registrarDatosCanje(libro, parametros) {
   const nombre = String(parametros.nombre || "").trim();
   const telefono = String(parametros.telefono || "").trim();
   const correo = String(parametros.correo || "").trim();
+  const metodoPago = String(parametros.metodoPago || "").trim();
 
-  if (!codigo || !nombre || !telefono || !correo) {
+  if (!codigo || !nombre || !telefono || !correo || !metodoPago) {
     return { ok: false, error: "Todos los datos son obligatorios." };
   }
 
@@ -48,6 +49,10 @@ function registrarDatosCanje(libro, parametros) {
   bloqueo.waitLock(30000);
 
   try {
+    if (!registros.getRange(1, 7).getDisplayValue()) {
+      registros.getRange(1, 7).setValue("Metodo de pago");
+    }
+
     const codigos = registros.getRange(2, 2, registros.getLastRow() - 1, 1)
       .getDisplayValues()
       .flat()
@@ -59,6 +64,7 @@ function registrarDatosCanje(libro, parametros) {
     }
 
     registros.getRange(indice + 2, 3, 1, 3).setValues([[nombre, telefono, correo]]);
+    registros.getRange(indice + 2, 7).setValue(metodoPago);
     return { ok: true, guardado: true };
   } finally {
     bloqueo.releaseLock();
@@ -92,7 +98,7 @@ function registrarCodigo(libro, hoja, codigo) {
   try {
     const registros = libro.getSheetByName("Registros") || libro.insertSheet("Registros");
     if (registros.getLastRow() === 0) {
-      registros.appendRow(["Fecha", "Codigo", "Nombre", "Telefono", "Correo"]);
+      registros.appendRow(["Fecha", "Codigo", "Nombre", "Telefono", "Correo", "Estado de pago", "Metodo de pago"]);
     }
 
     const codigoNormalizado = codigo.toUpperCase();
