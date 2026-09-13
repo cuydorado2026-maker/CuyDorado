@@ -138,21 +138,38 @@
                  <label class="campo-dato" for="nombre-canje"><span aria-hidden="true">♟</span><input type="text" id="nombre-canje" name="nombre" placeholder="Nombre completo" autocomplete="name" required></label>
                  <label class="campo-dato" for="telefono-canje"><span aria-hidden="true">☎</span><input type="tel" id="telefono-canje" name="telefono" placeholder="Número de teléfono" autocomplete="tel" required></label>
                  <label class="campo-dato" for="correo-canje"><span aria-hidden="true">✉</span><input type="email" id="correo-canje" name="correo" placeholder="Correo electrónico" autocomplete="email" required></label>
+                 <label class="campo-dato" for="metodo-pago-canje"><span aria-hidden="true">S/</span><select id="metodo-pago-canje" name="metodoPago" required><option value="" disabled selected>¿Cómo deseas recibir tu pago?</option><option value="Yape">Yape</option><option value="Plin">Plin</option><option value="Otro">Otro</option></select></label>
+                 <label class="campo-dato" id="otro-metodo-contenedor" for="otro-metodo-canje" hidden><span aria-hidden="true">✎</span><input type="text" id="otro-metodo-canje" name="otroMetodo" placeholder="Escribe tu método de pago"></label>
                  <button type="submit" class="boton-enviar">&#127873; ENVIAR DATOS <span aria-hidden="true">›</span></button>
                  <p id="mensaje-canje" role="status" aria-live="polite"></p>
              </form>`;
 
-         document.getElementById("formulario-canje").addEventListener("submit", async (evento) => {
+         const formularioCanje = document.getElementById("formulario-canje");
+         const metodoPago = document.getElementById("metodo-pago-canje");
+         const otroMetodoContenedor = document.getElementById("otro-metodo-contenedor");
+         const otroMetodo = document.getElementById("otro-metodo-canje");
+
+         metodoPago.addEventListener("change", () => {
+             const esOtro = metodoPago.value === "Otro";
+             otroMetodoContenedor.hidden = !esOtro;
+             otroMetodo.required = esOtro;
+             if (esOtro) otroMetodo.focus();
+         });
+
+         formularioCanje.addEventListener("submit", async (evento) => {
              evento.preventDefault();
-             const formularioCanje = evento.currentTarget;
              const datos = new FormData(formularioCanje);
              const mensajeCanje = document.getElementById("mensaje-canje");
+             const metodoPagoElegido = datos.get("metodoPago") === "Otro"
+                 ? `Otro: ${datos.get("otroMetodo")}`
+                 : datos.get("metodoPago");
              const parametros = new URLSearchParams({
                  accion: "canjear",
                  codigo: codigoGanador,
                  nombre: datos.get("nombre"),
                  telefono: datos.get("telefono"),
-                 correo: datos.get("correo")
+                 correo: datos.get("correo"),
+                 metodoPago: metodoPagoElegido
              });
 
              mensajeCanje.textContent = "Guardando tus datos...";
